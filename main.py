@@ -1,4 +1,4 @@
-
+import heapq
 pocet_krokov = 0
 counter = 1
 stack = []
@@ -16,7 +16,7 @@ def skontroluj_krok(n, x, y): # pridat aj ze nie je visited?
 
 def najdi_susedov(sachovnica, x, y, n):
     # ak pocet krokov je 64 a vsetko je navstivene, nalsi sme riesenie?
-    stack = []
+    zoznam_susedov = []
     riadok = [2, 1, -1, -2, -2, -1, 1, 2]
     stlpec = [1, 2, 2, 1, -1, -2, -2, -1]
     for i in range(8):
@@ -27,18 +27,29 @@ def najdi_susedov(sachovnica, x, y, n):
 
         # zisti, ci nepresahuje von zo sachovnice
         if (skontroluj_krok(n, nove_X, nove_Y)) is True and sachovnica[nove_X][nove_Y][0] != 1: #a nebol navstiveny
-            stack.append((nove_X, nove_Y))
+            zoznam_susedov.append((nove_X, nove_Y))
             pocet = 0
-    return stack
+    return zoznam_susedov
 
 
 def pohyb(sachovnica, x, y, n):
     susedia = najdi_susedov(sachovnica, x, y, n)
+    min_pocet_susedov = 8 # max hodnota
+    kam_pojde = None
+    pq = []
     print(susedia)
     print("_______________")
     for sused in susedia:
-        pocet_susedov = najdi_susedov(sachovnica, sused[0], sused[1], n)
-        print(pocet_susedov)
+        #print(sused)
+        pocet_susedov = len(najdi_susedov(sachovnica, sused[0], sused[1], n))
+        heapq.heappush(pq, (pocet_susedov, sused)) # According to the example from the documentation, you can use tuples, and it will sort by the first element of the tuple
+        #if pocet_susedov < min_pocet_susedov:
+            #kam_pojde = sused
+            #min_pocet_susedov = pocet_susedov
+        #print(pocet_susedov)
+    kam_pojde = heapq.heappop(pq)
+    print(kam_pojde[1])
+    return kam_pojde[1]
 
 
 
