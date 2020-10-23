@@ -1,18 +1,17 @@
 import heapq
-pocet_krokov = 0
-counter = 1
-stack = []
 
 def postav_sachovnicu(n):
-    sachovnica = [[[0,0] for i in range(n)] for j in range(n)]
+    sachovnica = [[0 for i in range(n)] for j in range(n)]
     for riadok in sachovnica:
         print(riadok)
     return sachovnica
+
 
 def skontroluj_krok(n, x, y): # pridat aj ze nie je visited?
     if x < 0 or y < 0 or x >= n or y >= n:
         return False
     return True
+
 
 def najdi_susedov(sachovnica, x, y, n):
     # ak pocet krokov je 64 a vsetko je navstivene, nalsi sme riesenie?
@@ -26,7 +25,7 @@ def najdi_susedov(sachovnica, x, y, n):
         nove_Y = y + stlpec[i]
 
         # zisti, ci nepresahuje von zo sachovnice
-        if (skontroluj_krok(n, nove_X, nove_Y)) is True and sachovnica[nove_X][nove_Y][0] != 1: #a nebol navstiveny
+        if (skontroluj_krok(n, nove_X, nove_Y)) is True and int(sachovnica[nove_X][nove_Y]) == 0: #a nebol navstiveny
             zoznam_susedov.append((nove_X, nove_Y))
             pocet = 0
     return zoznam_susedov
@@ -37,7 +36,6 @@ def pohyb(sachovnica, x, y, n):
     min_pocet_susedov = 8 # max hodnota
     kam_pojde = None
     pq = []
-    print(susedia)
     print("_______________")
     for sused in susedia:
         #print(sused)
@@ -48,10 +46,24 @@ def pohyb(sachovnica, x, y, n):
             #min_pocet_susedov = pocet_susedov
         #print(pocet_susedov)
     kam_pojde = heapq.heappop(pq)
-    print(kam_pojde[1])
-    return kam_pojde[1]
+    print(kam_pojde[1][0])
+    print(kam_pojde[1][1])
+    return kam_pojde[1][0], kam_pojde[1][1]
 
 
+def najdi_cestu(sachovnica, x, y, n, pocet_krokov):
+    sachovnica[x][y] = pocet_krokov
+    if pocet_krokov == n * n:
+        print("nasli sme vysledok")
+        for riadok in sachovnica:
+            print(riadok)
+        # vypis sachovnicu
+    else:
+        x, y = pohyb(sachovnica, x, y, n)
+        print(x)
+        print(y)
+        najdi_cestu(sachovnica, x, y, n, pocet_krokov + 1)
+        sachovnica[x][y] = 0
 
 
 if __name__ == '__main__':
@@ -59,9 +71,10 @@ if __name__ == '__main__':
     sachovnica = postav_sachovnicu(n)
     x = int(input("Zadajte 1. suradnicu kona (riadok): "))
     y = int(input("Zadajte 2. suradnicu kona (stlpec): "))
-    sachovnica[x][y][0] = 1
-    sachovnica[x][y][1] = counter
+    pocet_krokov = 1
+    #sachovnica[x][y][0] = 1 # 1 - navstivene, 0 nenavstivene
+    #sachovnica[x][y][1] = pocet_krokov
     #for riadok in sachovnica:
         #print(riadok)
-    pohyb(sachovnica, x, y, n)
+    najdi_cestu(sachovnica, x, y, n, pocet_krokov)
 
