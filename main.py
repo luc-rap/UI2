@@ -24,14 +24,14 @@ def vypis_sachovnicu(sachovnica):
         print(riadok)
 
 
-# funkcia zisti pocet vsetkych policok, ktore sa daju z daneho policka navstivit
+# funkcia zisti vsetky policka, ktore sa daju z daneho policka navstivit
 def najdi_susedov(sachovnica, x, y, n):
     zoznam_susedov = []
     riadok = [2, 1, -1, -2, -2, -1, 1, 2]
     stlpec = [1, 2, 2, 1, -1, -2, -2, -1]
     for i in range(8):
 
-        # vsetky kroky y aktualneho policka
+        # vsetky kroky z aktualneho policka
         nove_X = x + riadok[i]
         nove_Y = y + stlpec[i]
 
@@ -51,7 +51,7 @@ def najdi_cestu(sachovnica, x, y, n, pocet_krokov):
 
     # uspesne sme navstivili vsetky policka
     if pocet_krokov == n * n:
-        print("nasli sme vysledok. pocet pokusov: ", pocet_pokusov)
+        print("Nasli sme vysledok. Pocet pokusov: ", pocet_pokusov)
         vypis_sachovnicu(sachovnica)
         return True
 
@@ -117,10 +117,10 @@ def test(n):
 
         pocet_pokusov = 1
 
-    print("Riesenie sme nasli na prvy pokus: ", prvy_pokus, "krat, co je ", round((prvy_pokus / pocet_testov)*100, 2), "%")
-    print("Riesenie sme nasli pre opakovane pokusy: ", dalsi_pokus, "krat, co je ", round((dalsi_pokus / pocet_testov) * 100, 2), "%")
+    print("Riesenie sme nasli na prvy pokus: ", prvy_pokus, "-krat, co je ", round((prvy_pokus / pocet_testov)*100, 2), "%")
+    print("Riesenie sme nasli pre opakovane pokusy: ", dalsi_pokus, "-krat, co je ", round((dalsi_pokus / pocet_testov) * 100, 2), "%")
     vysledok = (nenaslo / pocet_testov) * 100
-    print("Riesenie sme nenasli alebo trvalo velmi dlho: ", nenaslo, "krat, co je ", round(vysledok, 2),"%")
+    print("Riesenie sme nenasli alebo trvalo velmi dlho: ", nenaslo, "-krat, co je ", round(vysledok, 2),"%")
 
 
 if __name__ == '__main__':
@@ -133,7 +133,7 @@ if __name__ == '__main__':
         if n < 5 or n > 35:
             print("Min. velkost je 5 a max. je 35.")
         else:
-            prepinac = input("Chcete zadat vlastne suradnice, alebo pustit test? [s] / [t] : ")
+            prepinac = input("Chcete zadat vlastne suradnice, alebo pustit test? Zadajte: [s] suradnice / [t] test: ")
             if prepinac == 's':
                 sachovnica = postav_sachovnicu(n)
                 x = int(input("Zadajte 1. suradnicu kona (riadok): "))
