@@ -1,14 +1,15 @@
 import heapq
 import sys
+from numpy import random
+
+pocet_pokusov = 1
 
 def postav_sachovnicu(n):
     sachovnica = [[0 for i in range(n)] for j in range(n)]
-    for riadok in sachovnica:
-        print(riadok)
     return sachovnica
 
 
-def skontroluj_krok(n, x, y):  # pridat aj ze nie je visited?
+def skontroluj_krok(n, x, y):
     if x < 0 or y < 0 or x >= n or y >= n:
         return False
     return True
@@ -36,45 +37,77 @@ def najdi_susedov(sachovnica, x, y, n):
             pocet = 0
     return zoznam_susedov
 
+
 def najdi_cestu(sachovnica, x, y, n, pocet_krokov):
-    sachovnica[x][y] = pocet_krokov
-    if pocet_krokov == n * n:
-        print("nasli sme vysledok")
-        vypis_sachovnicu(sachovnica)
-        exit()
-        # return
-        # vypis sachovnicu
-    susedia = najdi_susedov(sachovnica, x, y, n)
-    min_pocet_susedov = 8  # max hodnota
+    global pocet_pokusov
+
     pq = []
+
+    if pocet_pokusov >= 1000000:
+
+        pocet_pokusov = 1
+        return False
+
+    sachovnica[x][y] = pocet_krokov
+
+    if pocet_krokov == n * n:
+        print("nasli sme vysledok. pocet pokusov: ", pocet_pokusov)
+        pocet_pokusov = 1
+        vypis_sachovnicu(sachovnica)
+        return True
+
+    susedia = najdi_susedov(sachovnica, x, y, n)
+
     kam_pojde = [None, None]
-    print("_______________")
+
+    #print("_______________")
 
     for sused in susedia:
         pocet_susedov = len(najdi_susedov(sachovnica, sused[0], sused[1], n))
         heapq.heappush(pq, (pocet_susedov, sused)) # will sort by the first element of the tuple
+
     # kym ma susedov
     while pq:
         # vezme najlepsieho suseda, vnori sa
         kam_pojde = pq[0]
         x, y = kam_pojde[1][0], kam_pojde[1][1]
-        vypis_sachovnicu(sachovnica)
         #vypis_sachovnicu(sachovnica)
         if najdi_cestu(sachovnica, x, y, n, pocet_krokov + 1):
             return True
         else:
-            print("backtracking...")
+            #print("backtracking...")
+            pocet_pokusov += 1
             # funkcia vrati false, pretoze uz nemal ziadnych suedov, takze vymaze predoslu moznost a skusi druhu
             heapq.heappop(pq)
             sachovnica[x][y] = 0
     return False
 
 
+def test(n):
+    for i in range(0, 20):
+        sachovnica = postav_sachovnicu(n)
+        x = random.randint(n-1)
+        y = random.randint(n-1)
+        pocet_krokov = 1
+        print(x, y)
+        vratenie = najdi_cestu(sachovnica, x, y, n, pocet_krokov)
+        print(vratenie)
+        if not vratenie:
+            print("Sachovnica nema riesenie, alebo velmi dlho hlada riesenie.")
+
+
 if __name__ == '__main__':
     sys.setrecursionlimit(1500)
     n = int(input("Zadajte velkost sachovnice: "))
-    sachovnica = postav_sachovnicu(n)
-    x = int(input("Zadajte 1. suradnicu kona (riadok): "))
-    y = int(input("Zadajte 2. suradnicu kona (stlpec): "))
-    pocet_krokov = 1
-    najdi_cestu(sachovnica, x, y, n, pocet_krokov)
+    prepinac = input("Chcete zadat vlastne suradnice, alebo pustit test? [s] / [t] : ")
+    if prepinac == 's':
+        sachovnica = postav_sachovnicu(n)
+        x = int(input("Zadajte 1. suradnicu kona (riadok): "))
+        y = int(input("Zadajte 2. suradnicu kona (stlpec): "))
+        pocet_krokov = 1
+        najdi_cestu(sachovnica, x, y, n, pocet_krokov)
+    elif prepinac == 't':
+        test(n)
+    else:
+        print("Neznamy prepinac.")
+
