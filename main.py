@@ -43,11 +43,6 @@ def najdi_cestu(sachovnica, x, y, n, pocet_krokov):
 
     pq = []
 
-    if pocet_pokusov >= 1000000:
-
-        pocet_pokusov = 1
-        return False
-
     sachovnica[x][y] = pocet_krokov
 
     if pocet_krokov == n * n:
@@ -72,42 +67,52 @@ def najdi_cestu(sachovnica, x, y, n, pocet_krokov):
         kam_pojde = pq[0]
         x, y = kam_pojde[1][0], kam_pojde[1][1]
         #vypis_sachovnicu(sachovnica)
+        if pocet_pokusov >= 1000000:
+            return False
+
         if najdi_cestu(sachovnica, x, y, n, pocet_krokov + 1):
             return True
         else:
             #print("backtracking...")
             pocet_pokusov += 1
-            # funkcia vrati false, pretoze uz nemal ziadnych suedov, takze vymaze predoslu moznost a skusi druhu
+            # funkcia vrati false, pretoze uz nemal ziadnych susedov, takze vymaze predoslu moznost a skusi druhu
             heapq.heappop(pq)
             sachovnica[x][y] = 0
     return False
 
 
 def test(n):
-    for i in range(0, 20):
+    global pocet_pokusov
+    for i in range(0, 50):
         sachovnica = postav_sachovnicu(n)
-        x = random.randint(n-1)
-        y = random.randint(n-1)
+        x = random.randint(n)
+        y = random.randint(n)
         pocet_krokov = 1
         print(x, y)
         vratenie = najdi_cestu(sachovnica, x, y, n, pocet_krokov)
-        print(vratenie)
         if not vratenie:
             print("Sachovnica nema riesenie, alebo velmi dlho hlada riesenie.")
+
+        pocet_pokusov = 1
 
 
 if __name__ == '__main__':
     sys.setrecursionlimit(1500)
     n = int(input("Zadajte velkost sachovnice: "))
-    prepinac = input("Chcete zadat vlastne suradnice, alebo pustit test? [s] / [t] : ")
-    if prepinac == 's':
-        sachovnica = postav_sachovnicu(n)
-        x = int(input("Zadajte 1. suradnicu kona (riadok): "))
-        y = int(input("Zadajte 2. suradnicu kona (stlpec): "))
-        pocet_krokov = 1
-        najdi_cestu(sachovnica, x, y, n, pocet_krokov)
-    elif prepinac == 't':
-        test(n)
+    if n < 5 or n > 35:
+        print("Sachovnica ma min. velkost 5 a max. 35.")
     else:
-        print("Neznamy prepinac.")
+        prepinac = input("Chcete zadat vlastne suradnice, alebo pustit test? [s] / [t] : ")
+        if prepinac == 's':
+            sachovnica = postav_sachovnicu(n)
+            x = int(input("Zadajte 1. suradnicu kona (riadok): "))
+            y = int(input("Zadajte 2. suradnicu kona (stlpec): "))
+            pocet_krokov = 1
+            vratenie = najdi_cestu(sachovnica, x, y, n, pocet_krokov)
+            if not vratenie:
+                print("Sachovnica nema riesenie, alebo velmi dlho hlada riesenie.")
+        elif prepinac == 't':
+            test(n)
+        else:
+            print("Neznamy prepinac.")
 
