@@ -75,7 +75,7 @@ def najdi_cestu(sachovnica, x, y, n, pocet_krokov):
         x, y = kam_pojde[1][0], kam_pojde[1][1]
 
         #vypis_sachovnicu(sachovnica)
-        if pocet_pokusov >= 10000000:
+        if pocet_pokusov >= 1000000:
             # ak hladame prilis dlho
             return False
         # rekurzivne vnaranie s novymi suradnicami
@@ -92,7 +92,7 @@ def najdi_cestu(sachovnica, x, y, n, pocet_krokov):
 
 
 # otestuje zvoleny pocet krat zvolenu sachovnicu s nahodnymi suradnicami
-def test(n):
+def test_nahodne(n):
     global pocet_pokusov
     prvy_pokus = 0
     dalsi_pokus = 0
@@ -122,6 +122,35 @@ def test(n):
     vysledok = (nenaslo / pocet_testov) * 100
     print("Riesenie sme nenasli alebo trvalo velmi dlho: ", nenaslo, "-krat, co je ", round(vysledok, 2),"%")
 
+def test_vsetky(n):
+    global pocet_pokusov
+    prvy_pokus = 0
+    dalsi_pokus = 0
+    nenaslo = 0
+    for i in range(0, n):
+        for j in range(0, n):
+            sachovnica = postav_sachovnicu(n)
+            x = i
+            y = j
+            pocet_krokov = 1
+            print("Zvolene suradnice: " , x, y)
+            vysledok = najdi_cestu(sachovnica, x, y, n, pocet_krokov)
+            if not vysledok: # funkcia vrati False, ked sme nenasli riesenie, alebo pocet krokov presiahol limit
+                print("Sachovnica nema riesenie, alebo velmi dlho hlada riesenie.")
+                nenaslo += 1
+            else:
+                if pocet_pokusov == 1:
+                    prvy_pokus += 1
+                else:
+                    dalsi_pokus += 1
+
+            pocet_pokusov = 1
+
+    print("Riesenie sme nasli na prvy pokus: ", prvy_pokus, "-krat, co je ", round((prvy_pokus / (n*n))*100, 2), "%")
+    print("Riesenie sme nasli pre opakovane pokusy: ", dalsi_pokus, "-krat, co je ", round((dalsi_pokus / (n*n)) * 100, 2), "%")
+    vysledok = (nenaslo / (n*n)) * 100
+    print("Riesenie sme nenasli alebo trvalo velmi dlho: ", nenaslo, "-krat, co je ", round(vysledok, 2),"%")
+
 
 if __name__ == '__main__':
     sys.setrecursionlimit(1500)
@@ -133,7 +162,7 @@ if __name__ == '__main__':
         if n < 5 or n > 35:
             print("Min. velkost je 5 a max. je 35.")
         else:
-            prepinac = input("Chcete zadat vlastne suradnice, alebo pustit test? Zadajte: [s] suradnice / [t] test: ")
+            prepinac = input("Chcete zadat vlastne suradnice, alebo pustit test? Zadajte: [s] suradnice / [t] test nahodne suradnice / [tv] test vsetky suradnice: ")
             if prepinac == 's':
                 sachovnica = postav_sachovnicu(n)
                 x = int(input("Zadajte 1. suradnicu kona (riadok): "))
@@ -143,7 +172,9 @@ if __name__ == '__main__':
                 if not vysledok:
                     print("Sachovnica nema riesenie, alebo velmi dlho hlada riesenie.")
             elif prepinac == 't':
-                test(n)
+                test_nahodne(n)
+            elif prepinac == 'tv':
+                test_vsetky(n)
             else:
                 print("Neznamy prepinac.")
 
