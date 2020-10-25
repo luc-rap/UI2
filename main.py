@@ -43,7 +43,7 @@ def najdi_susedov(sachovnica, x, y, n):
 
 
 # funkcia pomocou Warnsdorffovej heuristiky a hladania do hlbky hlada cestu pre Eulerovho kona
-def najdi_cestu(sachovnica, x, y, n, pocet_krokov):
+def najdi_cestu(sachovnica, x, y, n, pocet_krokov, pokusy):
     global pocet_pokusov
 
     pq = []
@@ -76,11 +76,11 @@ def najdi_cestu(sachovnica, x, y, n, pocet_krokov):
         x, y = kam_pojde[1][0], kam_pojde[1][1]
 
         #vypis_sachovnicu(sachovnica)
-        if pocet_pokusov >= 1000000:
+        if pocet_pokusov >= pokusy:
             # ak hladame prilis dlho
             return False
         # rekurzivne vnaranie s novymi suradnicami
-        if najdi_cestu(sachovnica, x, y, n, pocet_krokov + 1):
+        if najdi_cestu(sachovnica, x, y, n, pocet_krokov + 1, pokusy):
             return True
         else:
             # print("backtracking...")
@@ -93,7 +93,7 @@ def najdi_cestu(sachovnica, x, y, n, pocet_krokov):
 
 
 # otestuje zvoleny pocet krat zvolenu sachovnicu s nahodnymi suradnicami
-def test_nahodne(n):
+def test_nahodne(n, pokusy):
     global pocet_pokusov
     prvy_pokus = 0
     dalsi_pokus = 0
@@ -107,7 +107,7 @@ def test_nahodne(n):
         pocet_krokov = 1
         print("Nahodne zvolene suradnice: " , x, y)
         start = time.time()
-        vysledok = najdi_cestu(sachovnica, x, y, n, pocet_krokov)
+        vysledok = najdi_cestu(sachovnica, x, y, n, pocet_krokov, pokusy)
         stop = time.time()
         print("Hladanie trvalo: ", (stop - start), "s")
         if not vysledok: # funkcia vrati False, ked sme nenasli riesenie, alebo pocet krokov presiahol limit
@@ -126,7 +126,7 @@ def test_nahodne(n):
     vysledok = (nenaslo / pocet_testov) * 100
     print("Riesenie sme nenasli alebo trvalo velmi dlho: ", nenaslo, "-krat, co je ", round(vysledok, 2),"%")
 
-def test_vsetky(n):
+def test_vsetky(n, pokusy):
     global pocet_pokusov
     prvy_pokus = 0
     dalsi_pokus = 0
@@ -139,7 +139,7 @@ def test_vsetky(n):
             pocet_krokov = 1
             print("Zvolene suradnice: " , x, y)
             start = time.time()
-            vysledok = najdi_cestu(sachovnica, x, y, n, pocet_krokov)
+            vysledok = najdi_cestu(sachovnica, x, y, n, pocet_krokov, pokusy)
             stop = time.time()
             print("Hladanie trvalo: ", (stop - start), "s")
             if not vysledok: # funkcia vrati False, ked sme nenasli riesenie, alebo pocet krokov presiahol limit
@@ -163,6 +163,7 @@ if __name__ == '__main__':
     sys.setrecursionlimit(1500)
     try:
         n = int(input("Zadajte velkost sachovnice: "))
+        pokusy = int(input("Zadajte pocet pokusov hladania (odporucany pocet 1 milion az 10 milionov): "))
     except ValueError:
         print("Mozete zadat len cislo.")
     else:
@@ -176,15 +177,15 @@ if __name__ == '__main__':
                 y = int(input("Zadajte 2. suradnicu kona (stlpec): "))
                 pocet_krokov = 1
                 start = time.time()
-                vysledok = najdi_cestu(sachovnica, x, y, n, pocet_krokov)
+                vysledok = najdi_cestu(sachovnica, x, y, n, pocet_krokov, pokusy)
                 stop = time.time()
                 print("Hladanie trvalo: ", (stop-start) ,"s")
                 if not vysledok:
                     print("Sachovnica nema riesenie, alebo velmi dlho hlada riesenie.")
             elif prepinac == 't':
-                test_nahodne(n)
+                test_nahodne(n, pokusy)
             elif prepinac == 'tv':
-                test_vsetky(n)
+                test_vsetky(n, pokusy)
             else:
                 print("Neznamy prepinac.")
 
