@@ -1,6 +1,7 @@
 import heapq
 import sys
 from numpy import random
+import time
 
 pocet_pokusov = 1
 
@@ -105,7 +106,10 @@ def test_nahodne(n):
         y = random.randint(n)
         pocet_krokov = 1
         print("Nahodne zvolene suradnice: " , x, y)
+        start = time.time()
         vysledok = najdi_cestu(sachovnica, x, y, n, pocet_krokov)
+        stop = time.time()
+        print("Hladanie trvalo: ", (stop - start), "s")
         if not vysledok: # funkcia vrati False, ked sme nenasli riesenie, alebo pocet krokov presiahol limit
             print("Sachovnica nema riesenie, alebo velmi dlho hlada riesenie.")
             nenaslo += 1
@@ -134,7 +138,10 @@ def test_vsetky(n):
             y = j
             pocet_krokov = 1
             print("Zvolene suradnice: " , x, y)
+            start = time.time()
             vysledok = najdi_cestu(sachovnica, x, y, n, pocet_krokov)
+            stop = time.time()
+            print("Hladanie trvalo: ", (stop - start), "s")
             if not vysledok: # funkcia vrati False, ked sme nenasli riesenie, alebo pocet krokov presiahol limit
                 print("Sachovnica nema riesenie, alebo velmi dlho hlada riesenie.")
                 nenaslo += 1
@@ -168,7 +175,10 @@ if __name__ == '__main__':
                 x = int(input("Zadajte 1. suradnicu kona (riadok): "))
                 y = int(input("Zadajte 2. suradnicu kona (stlpec): "))
                 pocet_krokov = 1
+                start = time.time()
                 vysledok = najdi_cestu(sachovnica, x, y, n, pocet_krokov)
+                stop = time.time()
+                print("Hladanie trvalo: ", (stop-start) ,"s")
                 if not vysledok:
                     print("Sachovnica nema riesenie, alebo velmi dlho hlada riesenie.")
             elif prepinac == 't':
