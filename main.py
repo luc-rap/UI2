@@ -42,7 +42,7 @@ def najdi_susedov(sachovnica, x, y, n):
     return zoznam_susedov
 
 
-# funkcia pomocou Warnsdorffovej heuristiky a hladania do hlbky hlada cestu pre Eulerovho kona
+# funkcia pomocou Warnsdorffoveho pravidla a hladania do hlbky hlada cestu pre Eulerovho kona
 def najdi_cestu(sachovnica, x, y, n, pocet_krokov, pokusy):
     global pocet_pokusov
 
@@ -75,7 +75,7 @@ def najdi_cestu(sachovnica, x, y, n, pocet_krokov, pokusy):
         # vypocitame dalsie suradnice
         x, y = kam_pojde[1][0], kam_pojde[1][1]
 
-        #vypis_sachovnicu(sachovnica)
+        # vypis_sachovnicu(sachovnica)
         if pocet_pokusov >= pokusy:
             # ak hladame prilis dlho
             return False
@@ -107,6 +107,7 @@ def test_nahodne(n, pokusy):
         pocet_krokov = 1
         print("Nahodne zvolene suradnice: " , x, y)
         start = time.time()
+        # funkcia vracia true alebo false
         vysledok = najdi_cestu(sachovnica, x, y, n, pocet_krokov, pokusy)
         stop = time.time()
         print("Hladanie trvalo: ", (stop - start), "s")
@@ -126,6 +127,8 @@ def test_nahodne(n, pokusy):
     vysledok = (nenaslo / pocet_testov) * 100
     print("Riesenie sme nenasli alebo trvalo velmi dlho: ", nenaslo, "-krat, co je ", round(vysledok, 2),"%")
 
+
+# otestuje vsetky vychodzie policka
 def test_vsetky(n, pokusy):
     global pocet_pokusov
     prvy_pokus = 0
@@ -139,6 +142,7 @@ def test_vsetky(n, pokusy):
             pocet_krokov = 1
             print("Zvolene suradnice: " , x, y)
             start = time.time()
+            # funkcia vracia true alebo false
             vysledok = najdi_cestu(sachovnica, x, y, n, pocet_krokov, pokusy)
             stop = time.time()
             print("Hladanie trvalo: ", (stop - start), "s")
@@ -160,6 +164,7 @@ def test_vsetky(n, pokusy):
 
 
 if __name__ == '__main__':
+    # nastavene kvoli velkosti 35x35
     sys.setrecursionlimit(1500)
     try:
         n = int(input("Zadajte velkost sachovnice: "))
@@ -170,13 +175,14 @@ if __name__ == '__main__':
         if n < 5 or n > 35:
             print("Min. velkost je 5 a max. je 35.")
         else:
-            prepinac = input("Chcete zadat vlastne suradnice, alebo pustit test? Zadajte: [s] suradnice / [t] test nahodne suradnice / [tv] test vsetky suradnice: ")
+            prepinac = input("Chcete zadat vlastne suradnice, alebo pustit testy? Zadajte: [s] suradnice / [t] test nahodne suradnice / [tv] test vsetky suradnice: ")
             if prepinac == 's':
                 sachovnica = postav_sachovnicu(n)
                 x = int(input("Zadajte 1. suradnicu kona (riadok): "))
                 y = int(input("Zadajte 2. suradnicu kona (stlpec): "))
                 pocet_krokov = 1
                 start = time.time()
+                # funkcia vracia true alebo false
                 vysledok = najdi_cestu(sachovnica, x, y, n, pocet_krokov, pokusy)
                 stop = time.time()
                 print("Hladanie trvalo: ", (stop-start) ,"s")
